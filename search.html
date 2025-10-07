@@ -53,7 +53,7 @@
     <script>
         let students = [];
 
-        fetch('https://guesswho-1c5f6-default-rtdb.asia-southeast1.firebasedatabase.app/')
+        fetch('data.json')
             .then(response => response.json())
             .then(data => {
                 students = data;       
@@ -65,7 +65,7 @@
 
         function searchStudent() {
             const query = document.getElementById("searchInput").value.toLowerCase().trim();
-            const filtered = students.filter(student => student.name.toLowerCase().includes(query));
+            const filtered = students.filter(student => student.Name.toLowerCase().includes(query));
             displayStudents(filtered);
         }
 
@@ -84,8 +84,8 @@
                 const card = document.createElement("div");
                 card.className = "card";
                 card.innerHTML = `
-                <img src="${student.photo}" alt="${student.name}">
-                <p class="name">${student.name}</p>
+                <img src="${student.Photo}" alt="${student.Name}">
+                <p class="name">${student.Name}</p>
     `;
                 grid.appendChild(card);
             });

@@ -61,7 +61,7 @@
         let students = [];
         let currentStudent;
 
-        fetch('https://guesswho-1c5f6-default-rtdb.asia-southeast1.firebasedatabase.app/')
+        fetch('data.json')
             .then(res => res.json())
             .then(data => students = data)
             .catch(err => console.error(err));
@@ -78,12 +78,12 @@
             const correctIndex = Math.floor(Math.random() * students.length);
             currentStudent = students[correctIndex];
 
-            studentPhoto.src = currentStudent.photo;
+            studentPhoto.src = currentStudent.Photo;
 
-            let options = [currentStudent.name];
+            let options = [currentStudent.Name];
 
             while (options.length < 4) {
-                const randomName = students[Math.floor(Math.random() * students.length)].name;
+                const randomName = students[Math.floor(Math.random() * students.length)].Name;
                 if (!options.includes(randomName)) options.push(randomName);
             }
 
@@ -97,12 +97,12 @@
         }
 
         function checkAnswer(btn, name) {
-            if (name === currentStudent.name) {
+            if (name === currentStudent.Name) {
                 btn.classList.add('correct');
             } else {
                 btn.classList.add('wrong');
                 optionBtns.forEach(b => {
-                    if (b.textContent === currentStudent.name) b.classList.add('correct');
+                    if (b.textContent === currentStudent.Name) b.classList.add('correct');
                 });
             }
 
@@ -115,14 +115,14 @@
         const totalQuestions = 10;
 
         function checkAnswer(btn, name) {
-            if (name === currentStudent.name) {
+            if (name === currentStudent.Name) {
                 btn.classList.add('correct');
                 correctCount++;
             } else {
                 btn.classList.add('wrong');
                 wrongCount++;
                 optionBtns.forEach(b => {
-                    if (b.textContent === currentStudent.name) b.classList.add('correct');
+                    if (b.textContent === currentStudent.Name) b.classList.add('correct');
                 });
             }
 

@@ -12,7 +12,6 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="students.css">
-    <link rel="stylesheet" href="sandbox.js">
 
     <title>GuessWho</title>
 </head>
@@ -44,7 +43,7 @@
     </main>
     <footer></footer>
     <script>
-        fetch("https://guesswho-1c5f6-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        fetch("data.json")
             .then(response => response.json())
             .then(students => {
                 const grid = document.getElementById("studentGrid");
@@ -54,8 +53,8 @@
                     card.classList.add("card");
 
                     card.innerHTML = `
-            <img src="${student.photo}" alt="${student.name}" class="student-img">
-            <div class="name">${student.name}</div>
+            <img src="${student.Photo}" alt="${student.Name}" class="student-img">
+            <div class="name">${student.Name}</div>
           `;
 
                     grid.appendChild(card);
