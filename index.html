@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="sandbox.js">
+
+    <title>GuessWho</title>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/image/Logo.png" alt="">
+        </div>
+        <div class="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="students.html">Students</a></li>
+            </ul>
+        </div>
+    </header>
+    <main>
+        <div class="main" id="homeScreen">
+            <h1 class="dancing-script-custom">GuessWho</h1>
+            <p>Guess the name of NST Students</p>
+            <button class="start-button" id="startBtn">Start</button>
+        </div>
+
+        <div class="quiz" id="quizScreen" style="display:none;">
+            <div class="photo-container">
+                <img id="studentPhoto" src="" alt="Student">
+            </div>
+            <div class="options">
+                <button class="optionBtn"></button>
+                <button class="optionBtn"></button>
+                <button class="optionBtn"></button>
+                <button class="optionBtn"></button>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+
+    <script>
+
+        const startBtn = document.getElementById('startBtn');
+        const homeScreen = document.getElementById('homeScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const studentPhoto = document.getElementById('studentPhoto');
+        const optionBtns = document.querySelectorAll('.optionBtn');
+        let students = [];
+        let currentStudent;
+
+        fetch('https://guesswho-1c5f6-default-rtdb.asia-southeast1.firebasedatabase.app/')
+            .then(res => res.json())
+            .then(data => students = data)
+            .catch(err => console.error(err));
+
+        startBtn.addEventListener('click', startQuiz);
+
+        function startQuiz() {
+            homeScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const correctIndex = Math.floor(Math.random() * students.length);
+            currentStudent = students[correctIndex];
+
+            studentPhoto.src = currentStudent.photo;
+
+            let options = [currentStudent.name];
+
+            while (options.length < 4) {
+                const randomName = students[Math.floor(Math.random() * students.length)].name;
+                if (!options.includes(randomName)) options.push(randomName);
+            }
+
+            options.sort(() => Math.random() - 0.5);
+
+            optionBtns.forEach((btn, i) => {
+                btn.textContent = options[i];
+                btn.className = 'optionBtn';
+                btn.onclick = () => checkAnswer(btn, options[i]);
+            });
+        }
+
+        function checkAnswer(btn, name) {
+            if (name === currentStudent.name) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                optionBtns.forEach(b => {
+                    if (b.textContent === currentStudent.name) b.classList.add('correct');
+                });
+            }
+
+            setTimeout(showQuestion, 1500);
+        }
+
+        let currentQuestion = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        const totalQuestions = 10;
+
+        function checkAnswer(btn, name) {
+            if (name === currentStudent.name) {
+                btn.classList.add('correct');
+                correctCount++;
+            } else {
+                btn.classList.add('wrong');
+                wrongCount++;
+                optionBtns.forEach(b => {
+                    if (b.textContent === currentStudent.name) b.classList.add('correct');
+                });
+            }
+
+            currentQuestion++;
+
+            setTimeout(() => {
+                if (currentQuestion < totalQuestions) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            }, 1500);
+        }
+
+        function showScore() {
+  quizScreen.innerHTML = `
+    <h2>Quiz Completed!</h2>
+    <p>Correct Answers: ${correctCount}</p>
+    <p>Wrong Answers: ${wrongCount}</p>
+  `;
+
+  document.getElementById('restartBtn').addEventListener('click', restartQuiz);
+}
+
+
+    </script>
+</body>
+
+</html>
